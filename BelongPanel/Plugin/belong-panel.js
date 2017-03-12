@@ -46,7 +46,10 @@ MapLayer.drawUnitLayer = function() {
 		
 		if (session !== null) {
 			//キャラチップとセットになる箇所に追加
-			this._belongPanel.drawPanel();
+			//ユニット移動イベントはホスト側の処理であり手が出せないので描画しないことにする
+			if(root.getEventCommandType() !== EventCommandType.UNITMOVE) {
+				this._belongPanel.drawPanel();
+			}
 			session.drawUnitSet(true, true, true, index, index2);
 		}
 		
@@ -59,11 +62,26 @@ MapLayer.getBelongPanel = function() {
 	return this._belongPanel;
 };
 
-var alias3 = UnitRenderer.drawScrollUnit;
 UnitRenderer.drawScrollUnit = function(unit, x, y, unitRenderParam) {
+	var session = root.getCurrentSession();
+	var dx = 0;
+	var dy = 0;
+	
+	if (unitRenderParam === null) {
+			unitRenderParam = StructureBuilder.buildUnitRenderParam();
+	}
+	
+	this._setDefaultParam(unit, unitRenderParam);
+	
+	if (unitRenderParam.isScroll) {
+		dx = root.getCurrentSession().getScrollPixelX();
+		dy = root.getCurrentSession().getScrollPixelY();
+	}
+	
 	//移動中は位置指定で直接呼び出し
-	MapLayer.getBelongPanel().drawUnitPanelInternal(unit, x, y, unitRenderParam);
-	alias3.call(this, unit, x, y, unitRenderParam);
+	MapLayer.getBelongPanel().drawUnitPanelInternal(unit, x - dx, y - dy, unitRenderParam);
+	
+	this._drawCustomCharChip(unit, x - dx, y - dy, unitRenderParam);
 };
 
 //パネルオブジェクト----------------------------------------------------------------------
