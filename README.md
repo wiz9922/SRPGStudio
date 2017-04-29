@@ -9,6 +9,9 @@ Plugins for SRPG Studio
 ・SRPG Studio利用規約は遵守してください  
 http://srpgstudio.com/guide/rules.html  
 
+##AttackOnlyWeapon
+攻撃専用または反撃専用の武器が作成できます。  
+
 ##AttributeSystem
 属性によるダメージ変化を実装します。  
 ・必須はattribute-mainのみで、他はオブションです  
@@ -29,6 +32,7 @@ http://srpgstudio.com/guide/rules.html
 ・PluginとMaterialをコピーすればそのまま使えます  
 ・別の画像を使用する場合はbelong-panel内で指定してください  
  通常は32*32の画像が自軍、敵軍、同盟軍の順に3つ並んだものです
+ ※ver1.123以降、「マップユニットシンボル」として同等の機能が公式に追加されました
 
 ##FixedExp
 マップ内の取得経験値を固定します。  
@@ -47,7 +51,6 @@ http://srpgstudio.com/guide/rules.html
 
 ##UnknownHp
 HPが一定以上の時は「???」で表示されるようになります。  
-公式スクリプトの「mapunithp-disabled.js」の導入を推奨。  
 
 ##連絡先
 wiz  

@@ -21,11 +21,10 @@ HPバーはそのまま。
 wiz
 
 ■対応バージョン
-SRPG Studio Version:1.111
+SRPG Studio Version:1.123
 
-■注意事項
-マップ上のユニットのHP表示(環境で設定できるもの)は変更できないため、
-公式スクリプトの「mapunithp-disabled.js」を導入するなどして、非表示にしてください。
+■更新履歴
+2017/04/30 ver1.123対応。コンフィグのマップユニットHP表示から数値表示を削除
 
 ----------------------------------------------------------*/
 
@@ -209,6 +208,51 @@ RecoveryWindow._drawHpArea = function(x, y) {
 		else {
 			ContentRenderer.drawHp(x, y, balancer.getCurrentValue(), balancer.getMaxValue());
 		}
+};
+
+//マップユニットHP(コンフィグから数値表示を削除)
+ConfigItem.MapUnitHpVisible.getFlagCount = function() {
+		return 2;
+};
+
+ConfigItem.MapUnitHpVisible.getObjectArray = function() {
+	 	return [StringTable.MapUnitHp_Gauge, StringTable.MapUnitHp_None];
+};
+
+MapHpDecorator._setupDecorationFromType = function(type) {
+		var obj = root.getCurrentSession().getHpDecoration(type);
+		var x = 0;
+		var y = 20;
+		var width = 32;
+		var height = 10;
+		var color = this._getColor(type);
+		var alpha = this._getAlpha(type);
+		var strokeColor = 0xff;
+		var strokeAlpha = 255;
+		var type2 = EnvironmentControl.getMapUnitHpType();
+		
+		obj.beginDecoration();
+		
+		/*
+		if (type === 0) {
+			// addRectangleの前に色と輪郭を設定しておく
+			obj.setFillColor(color, alpha);
+			obj.setStrokeInfo(strokeColor, strokeAlpha, 1, true);
+			obj.addRectangle(x, y, width, height);
+			
+			//obj.addHp(x, y, this._getNumberColorIndex(type));
+		}
+		else if (type === 1) {
+			obj.addGauge(x, y, 1);
+		}
+		else {
+		}
+		*/
+		if (type2 === 0) {
+			obj.addGauge(x, y, 1);
+		}
+		
+		obj.endDecoration();
 };
 
 })();
