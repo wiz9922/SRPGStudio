@@ -9,7 +9,7 @@ Plugins for SRPG Studio
 ・SRPG Studio利用規約は遵守してください  
 http://srpgstudio.com/guide/rules.html  
 
-##AttackOnlyWeapon
+##AttackLimitWeapon
 攻撃専用または反撃専用の武器が作成できます。  
 
 ##AttributeSystem
