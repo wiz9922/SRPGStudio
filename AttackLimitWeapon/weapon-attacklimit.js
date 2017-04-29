@@ -1,0 +1,86 @@
+/*----------------------------------------------------------
+攻撃専用または反撃専用の武器が作成できます。
+
+使用方法:
+武器にカスタムパラメータを設定してください。
+{
+    attacktype:0
+}
+attacktype: 0で攻撃専用、1で反撃専用
+
+■作成者
+wiz
+
+■対応バージョン
+SRPG Studio Version:1.123
+
+----------------------------------------------------------*/
+
+(function() {
+
+//アイテム情報ウィンドウに表示する説明
+StringTable.Weapon_AttackOnly = '攻撃専用';
+StringTable.Weapon_CounterOnly = '反撃専用';
+
+//----------------------------------------------
+
+var AttackType = {
+	ATTACK: 0,
+	COUNTER: 1
+};
+
+//ユニットの種類とターンの種類から反撃か判定
+Miscellaneous.isCounter = function(unit) {
+	if(unit.getUnitType() !== root.getCurrentSession().getTurnType()){
+		return true;
+	}
+	return false;
+};
+
+var alias1 = ItemControl.isWeaponAvailable;
+ItemControl.isWeaponAvailable = function(unit, item){
+	var result = alias1.call(this, unit, item);
+	
+	if(typeof item.custom.attacktype === 'number'){
+		if(item.custom.attacktype === AttackType.ATTACK && Miscellaneous.isCounter(unit)){
+			return false;
+		}
+		else if(item.custom.attacktype === AttackType.COUNTER && !Miscellaneous.isCounter(unit)){
+			return false;
+		}
+	}
+	
+	return result;
+};
+
+var alias2 = ItemInfoWindow._configureWeapon;
+ItemInfoWindow._configureItem = function(groupArray) {
+	alias2.call(this, groupArray);
+	
+	//groupArray.appendObject(ItemSentence.AttackType);
+	groupArray.insertObject(ItemSentence.AttackType, 7);
+};
+
+ItemSentence.AttackType = defineObject(BaseItemSentence,
+{
+	drawItemSentence: function(x, y, item) {
+		var text;
+		
+		if (this.getItemSentenceCount(item) === 1) {
+			if(item.custom.attacktype === AttackType.ATTACK) {
+				text = StringTable.Weapon_AttackOnly;
+			}
+			else if(item.custom.attacktype === AttackType.COUNTER) {
+				text = StringTable.Weapon_CounterOnly;
+			}
+			ItemInfoRenderer.drawKeyword(x, y, text);
+		}
+	},
+	
+	getItemSentenceCount: function(item) {
+		return (item.isWeapon() && typeof item.custom.attacktype === 'number') ? 1 : 0;
+	}
+}
+);
+
+})();
