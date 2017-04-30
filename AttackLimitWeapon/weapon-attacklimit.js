@@ -53,8 +53,40 @@ ItemControl.isWeaponAvailable = function(unit, item){
 	return result;
 };
 
+//アイテム選択から装備だけは可能にする
+ItemControl.isWeaponEquipable = function(unit, item) {
+	var result = alias1.call(this, unit, item);
+	return result;
+};
+
+ItemSelectMenu.isWorkAllowed = function(index) {
+		var result = false;
+		var item = this._itemListWindow.getCurrentItem();
+		
+		if (item.isWeapon()) {
+			if (index === 0) {
+				//result = ItemControl.isWeaponAvailable(this._unit, item);
+				result = ItemControl.isWeaponEquipable(this._unit, item);
+			}
+			else if (index === 1) {
+				result = !item.isImportance();
+			}
+		}
+		else {
+			if (index === 0) {
+				result = this._isItemUsable(item);
+			}
+			else if (index === 1) {
+				result = !item.isImportance();
+			}
+		}
+		
+		return result;
+};
+
+//アイテム情報ウィンドウ
 var alias2 = ItemInfoWindow._configureWeapon;
-ItemInfoWindow._configureItem = function(groupArray) {
+ItemInfoWindow._configureWeapon = function(groupArray) {
 	alias2.call(this, groupArray);
 	
 	//groupArray.appendObject(ItemSentence.AttackType);
