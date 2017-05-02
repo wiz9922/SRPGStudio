@@ -220,7 +220,7 @@ ConfigItem.MapUnitHpVisible.getObjectArray = function() {
 };
 
 MapHpDecorator._setupDecorationFromType = function(type) {
-		var obj = root.getCurrentSession().getHpDecoration(type);
+		var obj = root.getHpDecoration(type);
 		var x = 0;
 		var y = 20;
 		var width = 32;
