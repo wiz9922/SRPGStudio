@@ -40,6 +40,10 @@ http://srpgstudio.com/guide/rules.html
 ・アイテム使用時の経験値  
 ・スキル使用時の経験値  
 
+##ItemSynthesis
+アイテム合成(ショップ)を作成します。  
+現状は拠点のみ。  
+
 ##MasterSkill
 特定の武器タイプを装備している場合にボーナスを得ることができます。
 
