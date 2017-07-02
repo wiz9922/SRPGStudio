@@ -59,6 +59,9 @@ http://srpgstudio.com/guide/rules.html
 ## QuestRetreat
 クエストマップに退却コマンド(拠点に戻る)を追加します。
 
+## ReinforceEvent
+イベントで援軍を強制的に出現させることができます。
+
 ## UnknownHp
 HPが一定以上の時は「???」で表示されるようになります。  
 
