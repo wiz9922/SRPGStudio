@@ -21,10 +21,11 @@ HPバーはそのまま。
 wiz
 
 ■対応バージョン
-SRPG Studio Version:1.123
+SRPG Studio Version:1.144
 
 ■更新履歴
 2017/04/30 ver1.123対応。コンフィグのマップユニットHP表示から数値表示を削除
+2017/08/12 ver1.144対応。ユニットメニュー等をdrawUnitHpZoneExに変更
 
 ----------------------------------------------------------*/
 
@@ -88,9 +89,9 @@ NumberRenderer.drawAttackUnknownNumber = function(x, y) {
 
 //-------------------------------------------------------------------------------
 //シンプルウィンドウ、ユニットメニュー、
-ContentRenderer.drawUnitHpZone = function(x, y, unit, pic) {
+ContentRenderer.drawUnitHpZoneEx = function(x, y, unit, pic, mhp) {
 		var hp = unit.getHp();
-		var mhp = ParamBonus.getMhp(unit);
+		//var mhp = ParamBonus.getMhp(unit);
 		
 		if(Miscellaneous.isUnknownHp(unit)) {
 			this.drawUnknownHp(x, y);

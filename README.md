@@ -9,6 +9,10 @@ Plugins for SRPG Studio
 ・SRPG Studio利用規約は遵守してください  
 http://srpgstudio.com/guide/rules.html  
 
+## AIScoreDistance
+AIが攻撃位置を決める要素に、距離などの位置関係を追加します。  
+敵の無駄な動きがある程度改善されます。
+
 ## AttackLimitWeapon
 攻撃専用または反撃専用の武器が作成できます。  
 
@@ -62,6 +66,9 @@ http://srpgstudio.com/guide/rules.html
 ## ReinforceEvent
 イベントで援軍を強制的に出現させることができます。
 
+## StockTrade
+ストックの「全預け」を「交換」に変更します。
+
 ## UnknownHp
 HPが一定以上の時は「???」で表示されるようになります。  
 
@@ -69,3 +76,5 @@ HPが一定以上の時は「???」で表示されるようになります。
 wiz  
 twitter: https://twitter.com/wiz9922  
 GitHub: https://github.com/wiz9922/SRPGstudio  
+mail: wizjp22○gamil.com  
+(○→@)  
