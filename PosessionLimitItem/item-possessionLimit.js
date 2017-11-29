@@ -12,11 +12,12 @@ limit: 所持できる個数
 wiz
 
 ■対応バージョン
-SRPG Stduio Version:1.108
+SRPG Stduio Version:1.159
 
 ■更新履歴
 2017/01/07	拠点でのショップとボーナス交換における不具合修正
 			アイテム交換で空き枠に送ろうとした場合に起こる不具合修正
+2017/11/30	イベントでユニットのアイテムを減らせない不具合修正
 
 --------------------------------------------------------------------------------------------------*/
 
@@ -195,9 +196,11 @@ ItemChangeEventCommand._checkEventCommand = function() {
 				this._isStockChange = true;
 			}
 			
-			//@制限あれば強制ストック
-			if(ItemControl.isPossessionItemLimited(this._targetUnit, this._targetItem)){
-				this._isStockChange = true;
+			//@アイテムを増やす場合、制限あれば強制ストック
+			if(this._increaseType === IncreaseType.INCREASE) {
+				if(ItemControl.isPossessionItemLimited(this._targetUnit, this._targetItem)){
+					this._isStockChange = true;
+				}
 			}
 		}
 		
