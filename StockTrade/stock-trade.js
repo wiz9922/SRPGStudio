@@ -11,15 +11,15 @@ Pluginフォルダにこのファイルを置いてください
 wiz
 
 ■対応バージョン
-SRPG Stduio Version:1.144
+SRPG Stduio Version:1.166
 --------------------------------------------------------------------------------------------------*/
 
 (function() {
 
 StringTable.StockItem_Trade = '交換';
 
-StockItemTradeMode.TRADESTORE = 5;
-StockItemTradeMode.TRADEEXTRACT = 6;
+StockItemTradeMode.TRADESTORE = 6;
+StockItemTradeMode.TRADEEXTRACT = 7;
 
 //TRADE系の処理を追加
 var alias1 = StockItemTradeScreen.moveScreenCycle;
@@ -83,6 +83,9 @@ StockItemTradeScreen._moveOperation = function() {
 			ItemControl.updatePossessionItem(this._unit);
 			
 			result = MoveResult.END;
+		}
+		else if (input === ScrollbarInput.OPTION) {
+			this._openMenu();
 		}
 		else if (this.getCycleMode() === StockItemTradeMode.OPERATION) {
 			if (this._unitSimpleWindow === null || this._unitList === null) {
