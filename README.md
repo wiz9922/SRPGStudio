@@ -41,6 +41,9 @@ AIが攻撃位置を決める要素に、距離などの位置関係を追加し
 ## ChangeDifficulty
 イベントから難易度を変更できます。  
 
+## ExperienceDistributionAdd
+経験値分配画面に追加機能を実装します。
+
 ## ExperienceGaugeBar
 経験値獲得画面をバー表示にします(UI画像を使用しないタイプ)
 
