@@ -1,6 +1,5 @@
 /*----------------------------------------------------------
 経験値分配画面に以下の機能を追加します。
-・ボーナスと経験値の変換レート
 ・数値入力で←→キーを押すと一定量増減(デフォルト10ずつ)
 ・変換前に確認メッセージ追加
 
@@ -8,14 +7,10 @@
 wiz
 
 ■対応バージョン
-SRPG Studio Version:1.189
+SRPG Studio Version:1.191
 ----------------------------------------------------------*/
 
 (function() {
-
-//変換レート
-//例えば10なら1Ex→10Bとなる
-var ConvertRate = 10;
 
 //←→キーの増減値
 var ChangeValue = 10;
@@ -107,43 +102,12 @@ ExperienceDistributionScreen._changeBonus = function() {
 
 //変換レート
 BonusInputWindow.convertExpToBonus = function() {
-	return Math.floor(this._exp * ConvertRate);
-};
-
-BonusInputWindow.getAvailableValue = function() {
-	var bonus = root.getMetaSession().getBonus();
-	return Math.floor(bonus / ConvertRate);
-};
-
-BonusInputWindow.getMaxValue = function() {
-	return 100 * ConvertRate;
+	return Math.floor(this._exp * this._getRate());
 };
 
 //増減値操作
-BonusInputWindow.setUnit = function(unit) {
-		var bonus = root.getMetaSession().getBonus();
-		
-		this._unit = unit;
-		this._isMaxLv = unit.getLv() === Miscellaneous.getMaxLv(unit);
-		
-		//if (bonus <= 0 || this._isMaxLv) {
-		if (this.getAvailableValue() <= 0 || this._isMaxLv) {
-			this._exp = -1;
-			this.changeCycleMode(BonusInputWindowMode.NONE);
-		}
-		else {
-			this._exp = 1;
-			//this._max = bonus > 100 ? 100 : bonus;
-			this._max = bonus > this.getMaxValue() ? 100 : this.getAvailableValue();
-			this._commandCursor = createObject(CommandCursor);
-			this._commandCursor.setCursorUpDown(2);
-			//this._commandCursor.setCursorCross(2, 2);
-			this.changeCycleMode(BonusInputWindowMode.INPUT);
-		}
-};
-
 BonusInputWindow._moveInput = function() {
-		var inputType, exp;
+		var inputType;
 		
 		if (InputControl.isSelectAction()) {
 			//ボーナス消費はScreen側で行う
