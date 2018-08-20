@@ -12,7 +12,7 @@ attacktype: 0で攻撃専用、1で反撃専用
 wiz
 
 ■対応バージョン
-SRPG Studio Version:1.123
+SRPG Studio Version:1.191
 
 ----------------------------------------------------------*/
 
@@ -40,6 +40,11 @@ Miscellaneous.isCounter = function(unit) {
 var alias1 = ItemControl.isWeaponAvailable;
 ItemControl.isWeaponAvailable = function(unit, item){
 	var result = alias1.call(this, unit, item);
+	
+	//拠点では通常通り
+	if(root.getCurrentScene() === SceneType.REST) {
+		return result;
+	}
 	
 	if(typeof item.custom.attacktype === 'number'){
 		if(item.custom.attacktype === AttackType.ATTACK && Miscellaneous.isCounter(unit)){
