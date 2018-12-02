@@ -59,10 +59,13 @@ TextRenderer.drawSwitchText = function(x, y) {
 
 //カスタムパラメータ取得
 ItemControl.getMaterial = function(item) {
-	if(typeof item.custom.material !== 'undefined') {
-		return item.custom.material;
+	if(item === null) {
+		return [];
 	}
-	return [];
+	if(typeof item.custom.material === 'undefined') {
+		return [];
+	}
+	return item.custom.material;
 };
 
 // ItemIdValue.BASE = 100000
@@ -251,6 +254,18 @@ var SynthesisScreen = defineObject(ShopLayoutScreen, {
 	_prepareScreenMemberData: function(screenParam) {
 		ShopLayoutScreen._prepareScreenMemberData.call(this, screenParam);
 		
+		//オブジェクト変更
+		this._itemSale = createObject(ItemSale2);
+		this._itemSale.setParentShopScreen(this);
+		
+		this._buyItemWindow = createWindowObject(BuyItemWindow2, this);
+		this._buySellWindow = createWindowObject(BuySellWindow2, this);
+		this._buyQuestionWindow = createWindowObject(BuyQuestionWindow2, this);
+		
+		this._activeSelectWindow = this._buySellWindow;
+		this._activeItemWindow = this._buyItemWindow;
+		
+		//追加分
 		this._shopType = screenParam.shopType;
 		this._priceRate = screenParam.priceRate;
 		this._materialWindow = createWindowObject(MaterialWindow, this);
@@ -275,9 +290,10 @@ var SynthesisScreen = defineObject(ShopLayoutScreen, {
 		if (isBuy) {
 			this.decreaseMaterial();
 		}
-		this.updateMaterial();
 		
 		ShopLayoutScreen._startSale.call(this, isBuy, isForceStock);
+		
+		this.updateMaterial();
 	},
 	
 	getShopType: function() {
