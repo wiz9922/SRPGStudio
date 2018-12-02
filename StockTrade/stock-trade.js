@@ -11,7 +11,7 @@ Pluginフォルダにこのファイルを置いてください
 wiz
 
 ■対応バージョン
-SRPG Stduio Version:1.166
+SRPG Stduio Version:1.198
 --------------------------------------------------------------------------------------------------*/
 
 (function() {
@@ -139,16 +139,22 @@ StockItemTradeScreen._moveTradeExtract = function() {
 		if (input === ScrollbarInput.SELECT) {
 			
 			//所持個数制限プラグインの存在チェック
-			if(ItemControl.isPossessionItemLimited != null) {
+			if(typeof UnitItemControl.isPossessionItemLimited === 'function') {
 				//制限あれば取り出し失敗
-				item = this._unitItemWindow.getCurrentItem();
-				unitItem = this._stockItemWindow.getCurrentItem();
-				if(ItemControl.isPossessionItemLimited(this._unit, unitItem)){
+				itemSrc = this._unitItemWindow.getCurrentItem();
+				itemDest = this._stockItemWindow.getCurrentItem();
+				if(UnitItemControl.isPossessionItemTypeLimited(this._unit, itemDest)) {
 					//同タイプのアイテム交換は許可する
-					if(!ItemControl.compareWeaponType(item, unitItem)) {
+					if(!ItemControl.compareWeaponType(itemSrc, itemDest)) {
 						this._playOperationBlockSound();
-						return MoveResult.CONTINUE;;
+						return MoveResult.CONTINUE;
 					}
+				}
+				
+				//サイズ合計が上限を超えなければアイテム交換を許可する
+				if(!UnitItemControl.isTradableItemSize(this._unit, itemSrc, itemDest)) {
+					this._playOperationBlockSound();
+					return MoveResult.CONTINUE;
 				}
 			}
 			

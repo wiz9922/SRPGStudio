@@ -32,7 +32,7 @@ material:[{id:3, value:1}, {id:4, value:2}, {id:100005, value:1}]
 wiz
 
 ■対応バージョン
-SRPG Studio Version:1.130
+SRPG Studio Version:1.198
 
 ----------------------------------------------------------*/
 
@@ -141,7 +141,7 @@ ShopShelfWindow.getPriceRate = function() {
 var alias2 = ShopShelfScrollbar._getPrice;
 ShopShelfScrollbar._getPrice = function(item) {
 	var price = alias2.call(this, item);
-	price *= this.getParentInstance().getPriceRate();
+	price = Math.floor(price * this.getParentInstance().getPriceRate());
 	return price;
 };
 
@@ -242,44 +242,14 @@ var SynthesisScreen = defineObject(ShopLayoutScreen, {
 	},
 	
 	notifyInfoItem: function(item) {
-		this._itemInfoWindow.setInfoItem(item);
+		ShopLayoutScreen.notifyInfoItem.call(this, item);
 		
 		this.updateMaterial();
 		this._materialWindow.setInfoItem(item);
 	},
 	
 	_prepareScreenMemberData: function(screenParam) {
-		// unitがnullの場合、売買ではストックアイテムが対象になる。
-		// たとえば、購入時にはストックアイテムにアイテムが追加される。
-		// 一方、unitがnullでない場合は、何らかのユニットが店を訪問したということで、ユニットアイテムが対象になる。
-		// つまり、ユニットのアイテム欄にアイテムが追加される。
-		this._targetUnit = screenParam.unit;
-		
-		this._shopLayout = screenParam.shopLayout;
-		
-		// 一度でも購入か売却を行うとtrue
-		this._isSale = false;
-		
-		this._nextmode = 0;
-		this._itemSale = createObject(ItemSale2);
-		this._itemSale.setParentShopScreen(this);
-		
-		this._shopItemArray = screenParam.itemArray;
-		this._inventoryArray = screenParam.inventoryArray;
-		this._buyItemWindow = createWindowObject(BuyItemWindow2, this);
-		this._sellItemWindow = createWindowObject(SellItemWindow, this);
-		this._buySellWindow = createWindowObject(BuySellWindow2, this);
-		this._buyQuestionWindow = createWindowObject(BuyQuestionWindow2, this);
-		this._sellQuestionWindow = createWindowObject(SellQuestionWindow, this);
-		this._visitorSelectWindow = createWindowObject(VisitorSelectWindow, this);
-		this._currencyWindow = createWindowObject(ShopCurrencyWindow, this);
-		this._keeperWindow = createWindowObject(ShopMessageWindow, this);
-		this._itemInfoWindow = createWindowObject(ItemInfoWindow, this);
-		
-		this._activeSelectWindow = this._buySellWindow;
-		this._activeItemWindow = this._buyItemWindow;
-		
-		this._createShopMessageTable(this._shopLayout);
+		ShopLayoutScreen._prepareScreenMemberData.call(this, screenParam);
 		
 		this._shopType = screenParam.shopType;
 		this._priceRate = screenParam.priceRate;
@@ -297,43 +267,17 @@ var SynthesisScreen = defineObject(ShopLayoutScreen, {
 			}
 		}
 		
-		var input = this._buyItemWindow.moveWindow();
-			
-		if (input === ScrollbarInput.SELECT) {
-			this._startMessage(this._shopMessageTable.SelectQuestion, ShopLayoutMode.BUYQUESTION);
-		}
-		else if (input === ScrollbarInput.CANCEL) {
-			this._startMessage(this._shopMessageTable.OtherMessage, ShopLayoutMode.BUYSELLSELECT);
-		}
-		
-		return MoveResult.CONTINUE;
+		return ShopLayoutScreen._moveBuy.call(this);
 	},
 	
 	_startSale: function(isBuy, isForceStock) {
-		var cutIndex;
-		var price = this._itemSale.startSale(isBuy, isForceStock, this._activeItemWindow.getShopSelectItem());
-		
+		//在庫が全てなくなるとSelectItemを取得できないので先に更新処理
 		if (isBuy) {
-			cutIndex = this._getCutIndex(this._activeItemWindow.getShopSelectItem());
-			if (cutIndex !== -1) {
-				this._shopItemArray.splice(cutIndex, 1);
-				this._inventoryArray.splice(cutIndex, 1);
-				this._buyItemWindow.updateItemArea();
-			}
-			
 			this.decreaseMaterial();
 		}
-		
-		// ゴールドを表示するウインドウの内容を変更する
-		this._currencyWindow.startPriceCount(price);
-		
-		this._isSale = true;
-		
-		// 買ったときはアイテムを増やし、売ったときはアイテムを減らすから常に呼び出す
-		this._sellItemWindow.updateItemArea();
 		this.updateMaterial();
 		
-		this._playSaleSound();
+		ShopLayoutScreen._startSale.call(this, isBuy, isForceStock);
 	},
 	
 	getShopType: function() {
@@ -380,34 +324,24 @@ var SynthesisScreen = defineObject(ShopLayoutScreen, {
 			value = this._materialRequireArray[i].value;
 			StockItemControl.cutStockItemMulti(id, value);
 		}
+	},
+	
+	_processMode: function(mode) {
+		ShopLayoutScreen._processMode.call(this, mode);
+		if (mode === ShopLayoutMode.BUYSELLSELECT) {
+			this._materialWindow.setInfoItem(null);
+		}
 	}
 });
-
-//長いので処理追加分だけ
-var alias11 = SynthesisScreen._processMode;
-SynthesisScreen._processMode = function(mode) {
-	alias11.call(this, mode);
-	if (mode === ShopLayoutMode.BUYSELLSELECT) {
-		this._materialWindow.setInfoItem(null);
-	}
-};
 
 //既存オブジェクトの処理追加・変更
 var ItemSale2 = defineObject(ItemSale, {
 	//価格変更
-	startSale: function(isBuy, isForceStock, item) {
-		var price = this._getPrice(isBuy, item);
-		
+	_getPrice: function(isBuy, item) {
+		var price = ItemSale._getPrice.call(this, isBuy, item);
 		if (isBuy) {
-			price *= this._parentShopScreen.getPriceRate();
-			this._pushBuyItem(item, isForceStock);
+			price = Math.floor(price * this._parentShopScreen.getPriceRate());
 		}
-		else {
-			this._cutSellItem(item);
-		}
-		
-		this._setPrice(price);
-		
 		return price;
 	}
 });
@@ -420,40 +354,10 @@ var BuySellWindow2 = defineObject(BuySellWindow, {
 });
 
 var BuyQuestionWindow2 = defineObject(BuyQuestionWindow, {
-	//条件追加
-	moveWindowContent: function() {
-		var input = this._scrollbar.moveInput();
-		var result = BuyQuestionResult.NONE;
-		
-		if (input === ScrollbarInput.SELECT) {
-			if (this._scrollbar.getIndex() === 0) {
-				if (!this._isPriceOk() || !this._isMaterialOK()) {
-					// 購入しようとしたが、ゴールドが足りなかった or 素材が足りなかった
-					result = BuyQuestionResult.NOGOLD;
-				}
-				else if (!this._isSpaceOk()) {
-					if (!this._isForceStockOk()) {
-						// 購入しようとしたが、アイテム欄が一杯だった
-						result = BuyQuestionResult.ITEMFULL;
-					}
-					else {
-						// アイテム欄が一杯だが、ストックに送ることで購入する
-						result = BuyQuestionResult.FORCESTOCK;
-					}
-				}
-				else {
-					result = BuyQuestionResult.BUY;
-				}
-			}
-			else {
-				result = BuyQuestionResult.CANCEL;
-			}
-		}
-		else if (input === ScrollbarInput.CANCEL) {
-			result = BuyQuestionResult.CANCEL;
-		}
-		
-		return result;
+	//素材が足りているかの条件追加
+	_isPriceOk: function() {
+		var result = BuyQuestionWindow._isPriceOk.call(this);
+		return result && this._isMaterialOK();
 	},
 	
 	_isMaterialOK: function() {
@@ -481,9 +385,8 @@ var BuyItemWindow2 = defineObject(BuyItemWindow, {
 var BuyScrollbar2 = defineObject(BuyScrollbar, {
 	//価格変更
 	_getPrice: function(item) {
-		var price = this.getParentInstance().getParentInstance().getGoldFromItem(item);
-		price = Math.floor(price * this.getParentInstance().getDiscountFactor());
-		price *= this.getParentInstance().getParentInstance().getPriceRate();
+		var price = BuyScrollbar._getPrice.call(this, item);
+		price = Math.floor(price * this.getParentInstance().getParentInstance().getPriceRate());
 		
 		return price;
 	}

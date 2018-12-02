@@ -121,12 +121,12 @@ BonusInputWindow._moveInput = function() {
 		}
 		
 		inputType = this._commandCursor.moveCursor();
-		if (inputType === InputType.UP || root.isMouseAction(MouseType.UPWHEEL)) {
+		if (inputType === InputType.UP || MouseControl.isInputAction(MouseType.UPWHEEL)) {
 			if (++this._exp > this._max) {
 				this._exp = 1;
 			}
 		}
-		else if (inputType === InputType.DOWN || root.isMouseAction(MouseType.DOWNWHEEL)) {
+		else if (inputType === InputType.DOWN || MouseControl.isInputAction(MouseType.DOWNWHEEL)) {
 			if (--this._exp < 1) {
 				this._exp = this._max;
 			}
