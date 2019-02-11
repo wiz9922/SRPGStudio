@@ -228,15 +228,13 @@ var SynthesisScreen = defineObject(ShopLayoutScreen, {
 		yBase += this._keeperWindow.getWindowHeight();
 		width = this._activeItemWindow.getWindowWidth();
 		
-		var mode = this.getCycleMode();
-		if(this._isMaterial && this.getCycleMode() === ShopLayoutMode.BUY) {
+		if(this.getCycleMode() === ShopLayoutMode.BUY && this._isMaterial) {
 			this._materialWindow.drawWindow(xBase + width, yBase);
 		}
 		else {
 			this._itemInfoWindow.drawWindow(xBase + width, yBase);
 		}
 		
-		//表示切替
 		if(this.getCycleMode() === ShopLayoutMode.BUY) {
 			TextRenderer.drawSwitchText(xBase + width + DefineControl.getWindowXPadding(), yBase + + DefineControl.getWindowYPadding());
 		}
@@ -274,12 +272,7 @@ var SynthesisScreen = defineObject(ShopLayoutScreen, {
 	_moveBuy: function() {
 		//表示切替判定
 		if(InputControl.isSwitchAction()) {
-			if(this._isMaterial) {
-				this._isMaterial = false;
-			}
-			else {
-				this._isMaterial = true;
-			}
+			this._isMaterial = !this._isMaterial;
 		}
 		
 		return ShopLayoutScreen._moveBuy.call(this);
@@ -346,6 +339,10 @@ var SynthesisScreen = defineObject(ShopLayoutScreen, {
 		ShopLayoutScreen._processMode.call(this, mode);
 		if (mode === ShopLayoutMode.BUYSELLSELECT) {
 			this._materialWindow.setInfoItem(null);
+		}
+		else if (mode === ShopLayoutMode.BUY) {
+			this.updateMaterial();
+			this._materialWindow.setInfoItem(this._buyItemWindow.getShopSelectItem());
 		}
 	}
 });
@@ -416,6 +413,10 @@ var MaterialWindow = defineObject(BaseWindow, {
 	_isWindowEnabled: false,
 	
 	drawWindowContent: function(x, y) {
+		if (this._item === null) {
+			return;
+		}
+		
 		var i;
 		var materialArray1 = this.getParentInstance().getMaterialRequireArray();
 		var materialArray2 = this.getParentInstance().getMaterialStockArray();
@@ -430,10 +431,6 @@ var MaterialWindow = defineObject(BaseWindow, {
 		
 		var x2 = x + GraphicsFormat.ICON_WIDTH + 160;
 		var dx = [0, 15, 30];
-		
-		if (this._item === null) {
-			return;
-		}
 		
 		TextRenderer.drawKeywordText(x, y, StringTable.Material, -1, color0, font);
 		y += this.getSpaceY();

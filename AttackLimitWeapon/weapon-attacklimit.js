@@ -12,7 +12,7 @@ attacktype: 0で攻撃専用、1で反撃専用
 wiz
 
 ■対応バージョン
-SRPG Studio Version:1.191
+SRPG Studio Version:1.198
 
 ----------------------------------------------------------*/
 
@@ -42,7 +42,8 @@ ItemControl.isWeaponAvailable = function(unit, item){
 	var result = alias1.call(this, unit, item);
 	
 	//拠点では通常通り
-	if(root.getCurrentScene() === SceneType.REST) {
+	//イベント中も判定できるようgetBaseScene
+	if(root.getBaseScene() === SceneType.REST) {
 		return result;
 	}
 	
