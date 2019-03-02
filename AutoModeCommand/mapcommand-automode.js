@@ -7,6 +7,10 @@ wiz
 
 ■対応バージョン
 SRPG Stduio Version:1.198
+
+■更新履歴
+2019/03/02 オートターンエンド有効時は自動行動後にマップコマンドが開かないように変更
+
 ----------------------------------------------------------*/
 (function() {
 
@@ -16,6 +20,22 @@ var _MapCommand_configureCommands = MapCommand.configureCommands;
 MapCommand.configureCommands = function(groupArray) {
 	_MapCommand_configureCommands.call(this, groupArray);
 	groupArray.insertObject(MapCommand.AutoMode, groupArray.length - 1);
+};
+
+MapCommand._moveOpen = function() {
+	var object = this._commandScrollbar.getObject();
+	var result = object.moveCommand();
+	
+	if(result === MoveResult.SELECT) {
+		return MoveResult.END;
+	}
+	
+	if(result !== MoveResult.CONTINUE) {
+		this._commandScrollbar.setActive(true);
+		this.changeCycleMode(ListCommandManagerMode.TITLE);
+	}
+	
+	return MoveResult.CONTINUE;
 };
 
 //BerserkFlowEntry参照
@@ -35,6 +55,9 @@ MapCommand.AutoMode = defineObject(BaseListCommand, {
 		if(this._autoTurn.moveTurnCycle() !== MoveResult.CONTINUE) {
 			//通常は全員行動済みになっているので再構築
 			this._listCommandManager.rebuildCommand();
+			if(EnvironmentControl.isAutoTurnEnd()) {
+				return MoveResult.SELECT;
+			}
 			return MoveResult.END;
 		}
 		return MoveResult.CONTINUE;
