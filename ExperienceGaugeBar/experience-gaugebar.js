@@ -133,10 +133,10 @@ ExperiencePlusEventCommand._prepareEventCommandMemberData= function() {
 		this._growthArray = null;
 		this._isMaxLv = false;
 
-		// obtainExperience()でユニットに経験値が加算される前にsetExperienceNumberData()を呼び出す
-		this._experienceNumberView.setExperienceNumberData(this._targetUnit, this._getExp);
-		
 		if (this._targetUnit !== null) {
+			// obtainExperience()でユニットに経験値が加算される前にsetExperienceNumberData()を呼び出す
+			this._experienceNumberView.setExperienceNumberData(this._targetUnit, this._getExp);
+			
 			this._isMaxLv = this._targetUnit.getLv() >= Miscellaneous.getMaxLv(this._targetUnit);
 			if (!this._isMaxLv && this._type === ExperiencePlusType.VALUE) {
 				this._growthArray = ExperienceControl.obtainExperience(this._targetUnit, this._getExp);

@@ -367,10 +367,14 @@ var BuySellWindow2 = defineObject(BuySellWindow, {
 });
 
 var BuyQuestionWindow2 = defineObject(BuyQuestionWindow, {
-	//素材が足りているかの条件追加
+	//価格係数と素材が足りているかの条件追加
 	_isPriceOk: function() {
-		var result = BuyQuestionWindow._isPriceOk.call(this);
-		return result && this._isMaterialOK();
+		var gold = this.getParentInstance().getGold();
+		var itemGold = this.getParentInstance().getGoldFromItem(this.getParentInstance().getSelectItem());
+		
+		itemGold = Math.floor(itemGold * this.getParentInstance().getDiscountFactor() * this.getParentInstance().getPriceRate());
+		
+		return gold >= itemGold && this._isMaterialOK();
 	},
 	
 	_isMaterialOK: function() {
