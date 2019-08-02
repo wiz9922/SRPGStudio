@@ -50,6 +50,9 @@ AIが攻撃位置を決める要素に、距離などの位置関係を追加し
 ## ExperienceGaugeBar
 経験値獲得画面をバー表示にします(UI画像を使用しないタイプ)
 
+## ExtendTestTable
+スイッチ調整と変数調整画面を変更します。
+
 ## FixedExp
 マップ内の取得経験値を固定します。  
 ・戦闘経験値  
@@ -91,5 +94,5 @@ HPが一定以上の時は「???」で表示されるようになります。
 wiz  
 twitter: https://twitter.com/wiz9922  
 GitHub: https://github.com/wiz9922/SRPGstudio  
-mail: wizjp22○gamil.com  
-(○→@)  
+mail: wizjp22あっとgmail.com  
+

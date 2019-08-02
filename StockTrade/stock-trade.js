@@ -133,7 +133,7 @@ StockItemTradeScreen._moveTradeStore = function() {
 
 //_moveExtractがベース
 StockItemTradeScreen._moveTradeExtract = function() {
-		var item, unitItem;
+		var itemSrc, itemDest;
 		var input = this._stockItemWindow.moveWindow();
 		
 		if (input === ScrollbarInput.SELECT) {
