@@ -6,6 +6,7 @@
 ・変数操作(改変元：名前未定氏)の処理を入れているので一緒に使わないでください
   マイナス値に対応しました
   入力した値が最小値より小さければ最小値が、最大値より大きければ最大値が設定されます
+  マウスホイールでも数値の変更ができます
 
 使用方法：
 Pluginフォルダに入れるだけ
@@ -23,7 +24,7 @@ SRPG Studio Version:1.205
 //スイッチ:ローカル→0、グローバル→1
 var FirstSwitchTableIndex = 0;
 
-//変数：テーブル1～5→0～4、ID変数→5
+//変数：グループ1～5→0～4、ID変数→5
 var FirstVariableTableIndex = 0;
 
 
@@ -436,12 +437,12 @@ var VariableScreen2 = defineObject(SwitchScreen2, {
 			this.changeCycleMode(TableScreenMode.LIST);
 		}
 		else {
-			//↑↓で増減
+			//↑↓キーまたはマウスホイールで増減
 			recentlyInput = this._editWindow.getRecentlyInputType();
-			if(recentlyInput === InputType.UP) {
+			if(recentlyInput === InputType.UP || root.isMouseAction(MouseType.UPWHEEL)) {
 				this._editWindow.incActiveNumber();
 			}
-			else if(recentlyInput === InputType.DOWN) {
+			else if(recentlyInput === InputType.DOWN || root.isMouseAction(MouseType.DOWNWHEEL)) {
 				this._editWindow.decActiveNumber();
 			}
 		}
