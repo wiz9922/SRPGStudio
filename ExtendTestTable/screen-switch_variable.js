@@ -15,7 +15,10 @@ Pluginフォルダに入れるだけ
 wiz
 
 ■対応バージョン
-SRPG Studio Version:1.205
+SRPG Studio Version:1.206
+
+■更新履歴
+2019/10/31	システム変数に対応
 
 ----------------------------------------------------------*/
 (function() {
@@ -479,6 +482,10 @@ var VariableScreen2 = defineObject(SwitchScreen2, {
 		SwitchScreen2._prepareScreenMemberData.call(this, screenParam);
 		this._listWindow = createWindowObject(VariableWindow2, this);
 		this._editWindow = createWindowObject(VariableEditWindow, this);
+		
+		if(isSystemVariableValid()) {
+			this._systemVariable = createObject(SystemVariableTable);
+		}
 	},
 	
 	_completeScreenMemberData: function(screenParam) {
@@ -529,11 +536,18 @@ var VariableScreen2 = defineObject(SwitchScreen2, {
 	},
 	
 	_getTable: function(tableIndex) {
+		if(isSystemVariableValid() && tableIndex === 6) {
+			return this._systemVariable;
+		}
 		return root.getMetaSession().getVariableTable(tableIndex);
 	},
 	
 	_getTableNameArray: function() {
-		return ['1','2','3','4','5','ID変数'];
+		var arr = ['1','2','3','4','5','ID変数'];
+		if(isSystemVariableValid()) {
+			arr.push('システム');
+		}
+		return arr;
 	}
 });
 
@@ -740,5 +754,58 @@ var VariableEditScrollbar = defineObject(BaseScrollbar, {
 		this._objectArray[this.getIndex()] = value;
 	}
 });
+
+/*----------------------------------------------------------
+システム変数用
+------------------------------------------------------------*/
+var isSystemVariableValid = function() {
+	return EnvironmentControl.initVariable;
+};
+
+//VariableTableと同等の機能
+var SystemVariableTable = defineObject(BaseObject, {
+	//オリジナルデータ取得
+	getList: function() {
+		return EnvironmentControl.getVariableDataList();
+	},
+	getData: function(index) {
+		return this.getList().getData(index);
+	},
+	
+	getVariableCount: function() {
+		return this.getList().getCount();
+	},
+	
+	getVariableId: function(index) {
+		return this.getData(index).getId();
+	},
+	
+	getVariableName: function(index) {
+		return this.getData(index).getName();
+	},
+	
+	getVariableDescription: function(index) {
+		return this.getData(index).getDescription();
+	},
+	
+	getVariableResourceHandle: function(index) {
+		return this.getData(index).getIconResourceHandle();
+	},
+	
+	getVariable: function(index) {
+		return EnvironmentControl.getVariable(this.getVariableId(index));
+	},
+	getVariableMin: function(index) {
+		return -999999;
+	},
+	getVariableMax: function(index) {
+		return 999999;
+	},
+	setVariable: function(index, value) {
+		EnvironmentControl.setVariable(this.getVariableId(index), value);
+	}
+});
+
+
 
 })();
