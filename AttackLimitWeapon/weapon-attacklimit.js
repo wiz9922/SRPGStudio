@@ -31,7 +31,8 @@ var AttackType = {
 
 //ユニットの種類とターンの種類から反撃か判定
 Miscellaneous.isCounter = function(unit) {
-	if(unit.getUnitType() !== root.getCurrentSession().getTurnType()){
+	var session = root.getCurrentSession();
+	if(session !== null && unit.getUnitType() !== session.getTurnType()){
 		return true;
 	}
 	return false;
