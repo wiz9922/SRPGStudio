@@ -175,7 +175,7 @@ var ReinforceEventCommand = defineObject(BaseEventCommand, {
 		this._reinforceChecker.drawReinforcementChecker();
 	},
 	
-	getEventCommmandName: function() {
+	getEventCommandName: function() {
 		return 'ReinforceEventCommand';
 	},
 	

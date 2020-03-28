@@ -31,6 +31,7 @@ SRPG Stduio Version:1.111
 ■更新履歴
 2017/01/20	作成
 2017/01/23	地形に対応、アイテム情報の項目追加、非表示設定追加
+2020/03/23	ダメージがマイナスの時に調整されていなかったのを修正
 
 --------------------------------------------------------------------------------------------------*/
 var AttrParamType = {
@@ -365,7 +366,7 @@ DamageCalculator.validValue = function(active, passive, weapon, damage) {
 	var mag = AttributeControl.calculateMagnification(active, passive);
 	damage = Math.floor(damage * mag);
 	
-	alias1.call(this, active, passive, weapon, damage);
+	damage = alias1.call(this, active, passive, weapon, damage);
 	
 	return damage;
 };

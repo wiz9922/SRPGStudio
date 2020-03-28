@@ -23,7 +23,7 @@ id:クエストIDを受け取る変数のID(未設定の場合は0)
 wiz
 
 ■対応バージョン
-SRPG Studio Version:1.206
+SRPG Studio Version:1.209
 ------------------------------------------------------------------------------*/
 (function() {
 
@@ -90,7 +90,7 @@ var BaseScreenEventCommand = defineObject(BaseEventCommand, {
 
 //イベントコマンド------------------------------------------
 var QuestSelectEventCommand = defineObject(BaseScreenEventCommand, {
-	getEventCommmandName: function() {
+	getEventCommandName: function() {
 		return 'QuestSelectEventCommand';
 	},
 	

@@ -21,7 +21,7 @@ cancel:入力キャンセルがtrueで有効、falseで無効となります(省
 wiz
 
 ■対応バージョン
-SRPG Studio Version:1.205
+SRPG Studio Version:1.209
 
 ----------------------------------------------------------*/
 (function() {
@@ -59,7 +59,7 @@ var NumberInputEventCommand = defineObject(BaseEventCommand, {
 		return false;
 	},
 	
-	getEventCommmandName: function() {
+	getEventCommandName: function() {
 		return 'NumberInputEventCommand';
 	},
 	
