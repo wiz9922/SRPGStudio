@@ -69,6 +69,10 @@ AIが攻撃位置を決める要素に、距離などの位置関係を追加し
 ## MasterSkill
 特定の武器タイプを装備している場合にボーナスを得ることができます。
 
+## NeutralUnit
+指定スイッチがオンの時、同盟軍を中立軍として扱います。  
+自軍と中立軍は互いに攻撃可能となります。
+
 ## NumberInputEvent
 数値入力イベントを作成できます。
 
@@ -103,5 +107,5 @@ HPが一定以上の時は「???」で表示されるようになります。
 wiz  
 twitter: https://twitter.com/wiz9922  
 GitHub: https://github.com/wiz9922/SRPGstudio  
-mail: wizjp22あっとgmail.com  
+mail: wizjp22@gmail.com  
 
