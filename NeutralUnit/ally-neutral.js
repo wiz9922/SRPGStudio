@@ -53,7 +53,7 @@ FilterControl.getReverseFilter = function(unitType) {
 			return _FilterControl_getReverseFilter.call(this, unitType);
 		}
 		
-		var filter;
+		var filter = 0;
 		
 		if(unitType === UnitType.PLAYER) {
 			filter = UnitFilterFlag.ENEMY | UnitFilterFlag.ALLY;
