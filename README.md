@@ -13,6 +13,9 @@ http://srpgstudio.com/guide/rules.html
 AIが攻撃位置を決める要素に、距離などの位置関係を追加します。  
 敵の無駄な動きがある程度改善されます。
 
+## AISimpleForDifficulty
+難易度によってAIを単純化させます。
+
 ## AttackLimitWeapon
 攻撃専用または反撃専用の武器が作成できます。  
 
