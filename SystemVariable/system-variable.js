@@ -18,21 +18,14 @@ EnvironmentControl.getVariable(id)
 システム変数を取得します。存在しないIDなら0になります。
 「戻り値を変数で受け取る」にチェックを入れてください。
 
-EnvironmentControl.setVariable(id, value)
+EnvironmentControl.setVariable(id)
  id:システム変数のID
- value:数値
-システム変数を設定します。存在しないIDは新たに作成されるので注意してください。
+システム変数を設定します。「オリジナルデータ」タブの数値1に値を入力してください。
+存在しないIDは新たに作成されるので注意してください。
 
-EnvironmentControl.addVariable(id, value)
+EnvironmentControl.addVariable(id)
  id:システム変数のID
- value:数値
-システム変数に加算します。減算したい場合はvalueにマイナス値を入れてください。
-
-EnvironmentControl.copyVariable(index1, id1, id2)
- index1:変数テーブルのインデックス(グループ1～5→0～4、ID変数→5)
- id1:変数のID
- id2:システム変数のID
-現在のデータの変数の値をシステム変数にコピーします。
+システム変数に加算します。「オリジナルデータ」タブの数値1に値を入力してください。
 
 EnvironmentControl.clearVariable()
 システム変数を全て消去し、オリジナルデータに従って初期値を設定し直します。
@@ -47,7 +40,7 @@ EnvironmentControl.clearVariable()
 wiz
 
 ■対応バージョン
-SRPG Stduio Version:1.206
+SRPG Stduio Version:1.223
 
 ------------------------------------------------------------------------------*/
 (function() {
@@ -95,6 +88,10 @@ EnvironmentControl.getVariable = function(id) {
 };
 
 EnvironmentControl.setVariable = function(id, value) {
+	if(typeof value === 'undefined') {
+		value = root.getEventCommandObject().getOriginalContent().getValue(0);
+	}
+	
 	var arr = this.getVariables();
 	if(id >= 0) {
 		arr[id] = value;
@@ -102,17 +99,11 @@ EnvironmentControl.setVariable = function(id, value) {
 };
 
 EnvironmentControl.addVariable = function(id, value) {
-	this.setVariable(id, this.getVariable(id) + value);
-};
-
-//コピー(現在のデータの変数→システム変数)
-//逆はgetVariableで戻り値を受け取ればいい
-EnvironmentControl.copyVariable = function(index1, id1, id2) {
-	var table = root.getMetaSession().getVariableTable(index1);
-	var index = table.getVariableIndexFromId(id1);
+	if(typeof value === 'undefined') {
+		value = root.getEventCommandObject().getOriginalContent().getValue(0);
+	}
 	
-	var value = table.getVariable(index);
-	this.setVariable(id2, value);
+	this.setVariable(id, this.getVariable(id) + value);
 };
 
 /*----------------------------------------------------------

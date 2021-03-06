@@ -1,6 +1,6 @@
 /*----------------------------------------------------------
 数値入力イベント
-数値入力ウィンドウ(6桁)を表示し、入力した値を変数に保存します
+数値入力ウィンドウを表示し、入力した値を変数に保存します
 
 使用方法：
 スクリプトの実行で「イベントコマンド呼び出し」、オブジェクト名「NumberInputEventCommand」
@@ -9,19 +9,21 @@
 {
 	table:0,
 	id:0,
-	cancel:false
+	cancel:false,
+	digit: 6
 }
 
 table:保存する変数のテーブル番号。グループ1～5→0～4、ID変数→5 (省略時は0)
 id:保存する変数のID (省略時は0)
 cancel:入力キャンセルがtrueで有効、falseで無効となります(省略時はfalse)
        キャンセルした場合は変数に-1が保存されます
+digit:入力できる数値の桁数(省略時は1)
 
 ■作成者
 wiz
 
 ■対応バージョン
-SRPG Studio Version:1.209
+SRPG Studio Version:1.223
 
 ----------------------------------------------------------*/
 (function() {
@@ -73,7 +75,8 @@ var NumberInputEventCommand = defineObject(BaseEventCommand, {
 		this._vId = arg.id || 0;
 		this._cancel = arg.cancel || false;
 		
-		this._editWindow.setWindowData();
+		var digit = arg.digit || 1;
+		this._editWindow.setWindowData(digit);
 		
 		return EnterResult.OK;
 	},
@@ -111,17 +114,24 @@ var NumberInputEventCommand = defineObject(BaseEventCommand, {
 	}
 });
 
-//編集用ウィンドウ(6桁)------------
+//編集用ウィンドウ------------
 var VariableEditWindow = defineObject(BaseWindow, {
 	_scrollbar: null,
+	_digit: 0,
 	
-	setWindowData: function() {
+	setWindowData: function(digit) {
+		//最低1桁
+		this._digit = Math.max(digit, 1);
 		this._scrollbar = createScrollbarObject(VariableEditScrollbar, this);
-		this._scrollbar.setScrollFormation(6, 1);
+		this._scrollbar.setScrollFormation(this._digit, 1);
 		this._scrollbar.setActive(true);
 		
 		//初期値0
-		var objectArray = [0, 0, 0, 0, 0, 0];
+		var i;
+		var objectArray = [];
+		for(i=0; i<this._digit; i++) {
+			objectArray.push(0);
+		}
 		this._scrollbar.setObjectArray(objectArray);
 	},
 	
@@ -138,8 +148,8 @@ var VariableEditWindow = defineObject(BaseWindow, {
 		var value = 0;
 		
 		//数値
-		for(i=0; i<6; i++) {
-			value += this._scrollbar.getValue(i) * Math.pow(10, 5-i);
+		for(i=0; i<this._digit; i++) {
+			value += this._scrollbar.getValue(i) * Math.pow(10, this._digit - 1 - i);
 		}
 		
 		return value;
