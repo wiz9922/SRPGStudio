@@ -114,13 +114,13 @@ BaseMessageView.getCharEmotionPos = function() {
 
 var _BaseMessageView_drawFace = BaseMessageView.drawFace;
 BaseMessageView.drawFace = function(xDest, yDest, isActive) {
-	_BaseMessageView_drawFace.call(this, xDest, yDest, isActive);
-	
 	//顔グラが表示されない場合は表示しない
 	var handle = this._faceHandle;
 	if (handle === null) {
 		return;
 	}
+	
+	_BaseMessageView_drawFace.call(this, xDest, yDest, isActive);
 	
 	var pic = GraphicsRenderer.getGraphics(handle, GraphicsType.FACE);
 	if (pic === null) {
@@ -136,13 +136,13 @@ BaseMessageView.drawFace = function(xDest, yDest, isActive) {
 
 var _BaseMessageView_drawCharIllust = BaseMessageView.drawCharIllust;
 BaseMessageView.drawCharIllust = function(isActive) {
-	_BaseMessageView_drawCharIllust.call(this, isActive);
-	
 	//立ち絵が表示されない場合は表示しない
 	var image = this._illustImage;
 	if (image === null || MessageViewControl.isHidden()) {
 		return;
 	}
+	
+	_BaseMessageView_drawCharIllust.call(this, isActive);
 	
 	var pos = this.getIllustPos(image);
 	var pos_e = this.getCharEmotionPos();
