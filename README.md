@@ -50,8 +50,8 @@ AIが攻撃位置を決める要素に、距離などの位置関係を追加し
 ## ChangeDifficulty
 イベントから難易度を変更できます。  
 
-## CustomSkillInvocationInvisible
-発動型ではないカスタムスキルは、スキル情報ウィンドウで発動率が非表示になります
+## CustomSkillInvocationHide
+発動時に表示しないカスタムスキルは、スキル情報ウィンドウで発動率が非表示になります
 
 ## EffectiveSkill
 有効相手に対して常時特効となるスキルを作成できます(非発動型)
