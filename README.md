@@ -50,6 +50,12 @@ AIが攻撃位置を決める要素に、距離などの位置関係を追加し
 ## ChangeDifficulty
 イベントから難易度を変更できます。  
 
+## CustomSkillInvocationInvisible
+発動型ではないカスタムスキルは、スキル情報ウィンドウで発動率が非表示になります
+
+## EffectiveSkill
+有効相手に対して常時特効となるスキルを作成できます(非発動型)
+
 ## ExperienceDistributionAdd
 経験値分配画面に追加機能を実装します。
 
@@ -102,6 +108,9 @@ AIが攻撃位置を決める要素に、距離などの位置関係を追加し
 
 ## ReplaceNpc
 NPCの名前を表示する制御文字を追加します。
+
+## SelectMenuDescription
+アイテム、武器、杖の選択時にユニットメニュー同様の説明文を表示します。
 
 ## StockTrade
 ストックの「全預け」を「交換」に変更します。
