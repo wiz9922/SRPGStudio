@@ -21,7 +21,7 @@ endRange: 終了射程の増減値(未設定なら0)
 wiz
 
 ■対応バージョン
-SRPG Studio Version 1.235
+SRPG Studio Version 1.281
 
 ----------------------------------------------------------*/
 (function() {
@@ -162,14 +162,9 @@ IndexArray.createIndexArray = function(x, y, item, unit) {
 			endRange = UnitItemControl.getEndRange(unit, item);
 		}
 		else {
-			if (item.getItemType() === ItemType.TELEPORTATION && item.getRangeType() === SelectionRangeType.SELFONLY) {
-				rangeValue = item.getTeleportationInfo().getRangeValue();
-				rangeType = item.getTeleportationInfo().getRangeType();
-			}
-			else {
-				rangeValue = item.getRangeValue();
-				rangeType = item.getRangeType();
-			}
+			obj = ItemRangeControl.getRangeObject(item);
+			rangeValue = obj.rangeValue;
+			rangeType = obj.rangeType;
 			
 			if (rangeType === SelectionRangeType.SELFONLY) {
 				return [];
