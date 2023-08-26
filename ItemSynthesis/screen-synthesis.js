@@ -185,6 +185,10 @@ ShopScreenLauncher.openScreenLauncher = function() {
 };
 
 ShopScreenLauncher.isSysnthesis = function() {
+	if(root.getCurrentScene() !== SceneType.REST)  {
+		return false;
+	}
+	
 	var shopData = this._shopData;
 	if(typeof shopData.custom.shopType === 'number') {
 		if(shopData.custom.shopType === ShopType.SYNTHESIS) {
