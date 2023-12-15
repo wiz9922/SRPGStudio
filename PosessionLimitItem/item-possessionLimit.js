@@ -9,7 +9,13 @@
 }
 limit: 所持できる個数
 
-②武器(アイテム)にサイズを設定できます。
+②武器(アイテム)に所持個数制限を設定できます。
+タイプによらず制限したい場合はこちらを使用してください。
+
+使用方法:
+下記MaxWeaponCount(MaxItemCount)を設定してください。
+
+③武器(アイテム)にサイズを設定できます。
 サイズ合計がアイテム所持数を超える場合は①同様に弾かれます。
 
 使用方法:
@@ -19,17 +25,22 @@ limit: 所持できる個数
 }
 size:武器、アイテムのサイズ(未設定は1)
 
+
+※初期設定は全て無効となっています。必要な機能の設定だけしてください
+
 ■作成者
 wiz
 
 ■対応バージョン
-SRPG Stduio Version:1.198
+SRPG Stduio Version:1.288
 
 ■更新履歴
 2017/01/07	拠点でのショップとボーナス交換における不具合修正
 			アイテム交換で空き枠に送ろうとした場合に起こる不具合修正
 2017/11/30	イベントでユニットのアイテムを減らせない不具合修正
 2018/12/02	サイズ設定を追加
+2023/12/15	情報ウィンドウにアイテムのサイズが表示されない不具合修正
+			武器およびアイテム単位での所持制限を追加
 
 --------------------------------------------------------------------------------------------------*/
 
@@ -41,10 +52,18 @@ var isSizeDisplayable = false;
 //表示する場合の文字列
 StringTable.Item_Size = 'サイズ';
 
+//武器の所持数制限(-1で無制限)
+var MaxWeaponCount = -1;
+
+//アイテムの所持数制限(-1で無制限)
+var MaxItemCount = -1;
+
 //----------------------------------------------------------
 //いずれかの制限に引っかかっているか
 UnitItemControl.isPossessionItemLimited = function(unit, item) {
-	return this.isPossessionItemTypeLimited(unit, item) || this.isPossessionItemSizeLimited(unit, item);
+	return this.isPossessionItemTypeLimited(unit, item)
+		|| this.isPossessionItemCountLimited(unit, item)
+		|| this.isPossessionItemSizeLimited(unit, item);
 };
 
 //unitがitemと同じタイプのものをlimit個以上持っているか
@@ -62,7 +81,7 @@ UnitItemControl.isPossessionItemTypeLimited = function(unit, item) {
 	
 	for(i=0; i<unitItemCount; i++){
 		u_item = UnitItemControl.getItem(unit, i);
-		if(u_item != null && ItemControl.compareWeaponType(u_item, item)){
+		if(ItemControl.compareWeaponType(u_item, item)){
 			count++;
 		}
 	}
@@ -76,6 +95,48 @@ ItemControl.compareWeaponType = function(item1, item2) {
 		return false;
 	}
 	if(item1.getWeaponType() !== item2.getWeaponType()) {
+		return false;
+	}
+	return true;
+};
+
+//unitの武器orアイテム所持数が上限値を超えているか
+UnitItemControl.isPossessionItemCountLimited = function(unit, item) {
+	if(item === null) {
+		return false;
+	}
+	
+	var max;
+	if(item.isWeapon()) {
+		max = MaxWeaponCount;
+	}
+	else {
+		max = MaxItemCount;
+	}
+	
+	if(max < 0) {
+		return false;
+	}
+	
+	var i, maxItemCount, count, u_item;
+	maxItemcount = DataConfig.getMaxUnitItemCount();
+	count = 0;
+	
+	for(i=0; i<maxItemcount; i++) {
+		u_item = unit.getItem(i)
+		if (ItemControl.compareCategory(u_item, item)) {
+			count++;
+		}
+	}
+	
+	return count >= max;
+};
+
+ItemControl.compareCategory = function(item1, item2) {
+	if(item1 === null || item2 === null) {
+		return false;
+	}
+	if(item1.isWeapon() !== item2.isWeapon()) {
 		return false;
 	}
 	return true;
@@ -144,6 +205,12 @@ UnitItemTradeScreen._isTradable = function() {
 		if(UnitItemControl.isPossessionItemTypeLimited(this._unitSrc, itemDest) || UnitItemControl.isPossessionItemTypeLimited(this._unitDest, itemSrc)) {
 			//同タイプのアイテム交換は許可する
 			if(!ItemControl.compareWeaponType(itemSrc, itemDest)) {
+				return false;
+			}
+		}
+		if(UnitItemControl.isPossessionItemCountLimited(this._unitSrc, itemDest) || UnitItemControl.isPossessionItemCountLimited(this._unitDest, itemSrc)) {
+			//武器同士orアイテム同士は許可する
+			if(!ItemControl.compareCategory(itemSrc, itemDest)) {
 				return false;
 			}
 		}
@@ -302,6 +369,12 @@ ItemChangeEventCommand._checkEventCommand = function() {
 var _ItemInfoWindow__configureWeapon = ItemInfoWindow._configureWeapon;
 ItemInfoWindow._configureWeapon = function(groupArray) {
 	_ItemInfoWindow__configureWeapon.call(this, groupArray);
+	groupArray.appendObject(ItemSentence.Size);
+};
+
+var _ItemInfoWindow__configureItem = ItemInfoWindow._configureItem;
+ItemInfoWindow._configureItem = function(groupArray) {
+	_ItemInfoWindow__configureItem.call(this, groupArray);
 	groupArray.appendObject(ItemSentence.Size);
 };
 
