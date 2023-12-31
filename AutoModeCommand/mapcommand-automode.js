@@ -10,6 +10,7 @@ SRPG Stduio Version:1.198
 
 ■更新履歴
 2019/03/02 オートターンエンド有効時は自動行動後にマップコマンドが開かないように変更
+2023/12/31 オート状態をスキップした時に発生する不具合を修正
 
 ----------------------------------------------------------*/
 (function() {
@@ -95,6 +96,7 @@ MapCommand.AutoMode = defineObject(BaseListCommand, {
 //PlayerBerserkTurn参照
 var PlayerAutoTurn = defineObject(EnemyTurn, {
 	_moveEndEnemyTurn: function() {
+		CurrentMap.setTurnSkipMode(false);
 		return MoveResult.END;
 	},
 	
