@@ -272,12 +272,6 @@ var AttributeControl = {
 			}
 		}
 		
-		if(type >= 0) {
-			root.log(this.getName(type)+'属性');
-		}
-		else {
-			root.log('属性なし');
-		}
 		return type;
 	},
 	
