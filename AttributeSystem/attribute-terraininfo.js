@@ -36,7 +36,7 @@ MapParts.Terrain._drawContent = function(x, y, terrain) {
 		this._drawKeyword(x, y, text, terrain.getMdf());
 	}
 	
-	if(AttributeControl.getAttackType(terrain) !== 0) {
+	if(AttributeControl.getAttackType(terrain) >= 0) {
 		type = AttributeControl.getAttackType(terrain);
 		if(AttributeControl.isShow(type)) {
 			y += this.getIntervalY();
@@ -113,7 +113,7 @@ var alias2 = MapParts.Terrain._getPartsCount;
 MapParts.Terrain._getPartsCount = function(terrain) {
 	var count = alias2.call(this, terrain);
 	
-	if(AttributeControl.getAttackType(terrain) !== 0) {
+	if(AttributeControl.getAttackType(terrain) >= 0) {
 		count++;
 	}
 	count += AttributeControl.getEnhanceCount(terrain);

@@ -6,7 +6,6 @@
 {name:～, show:～}の形式をカンマ区切りで追加することで新しい属性を設定することができます。
 
 2.ユニット、クラス、武器、アイテム、スキル、地形、ステートにカスタムパラメータを設定してください。
-未設定時は0として扱われます。そのため_Attributeの一番上(0番目)は無属性であることが推奨されます。
 
 例
 {
@@ -19,9 +18,9 @@
 }
 
 (それぞれ省略可)
-type: 付与する攻撃属性の番号(_Attributeの上から0,1,2,...とする)
-pow_n: n番目の属性強化値
-res_n: n番目の属性耐性値
+type: 付与する攻撃属性の番号(_Attributeの上から0,1,2,...とする)。未設定は属性なし
+pow_n: n番目の属性強化値。未設定は0
+res_n: n番目の属性耐性値。未設定は0
 
 3.下記「_Priority」に、複数の攻撃属性が付与される際の優先度を設定(項目の順番を変更)してください。
 例えば初期状態では、武器の属性よりスキルの属性が優先されます。
@@ -133,10 +132,10 @@ var AttributeControl = {
 	//objのカスパラから攻撃属性の種類を取得
 	getAttackType: function(obj) {
 		if(!this._isAttributeCustom(obj)) {
-			return 0;
+			return -1;
 		}
 		if(typeof obj.custom.attribute.type !== 'number') {
-			return 0;
+			return -1;
 		}
 		return obj.custom.attribute.type;
 	},
@@ -210,21 +209,21 @@ var AttributeControl = {
 			objectType = this.getPriority(ip);
 			if(objectType === ObjectType.UNIT) {
 				//ユニット
-				if(this.getAttackType(unit) !== 0) {
+				if(this.getAttackType(unit) >= 0) {
 					type = this.getAttackType(unit);
 				}
 			}
 			else if(objectType === ObjectType.CLS) {
 				//クラス
 				unitClass = unit.getClass();
-				if(this.getAttackType(unitClass) !== 0) {
+				if(this.getAttackType(unitClass) >= 0) {
 					type = this.getAttackType(unitClass);
 				}
 			}
 			else if(objectType === ObjectType.WEAPON) {
 				//武器
 				weapon = ItemControl.getEquippedWeapon(unit);
-				if(this.getAttackType(weapon) !== 0) {
+				if(this.getAttackType(weapon) >= 0) {
 					type = this.getAttackType(weapon);
 				}
 			}
@@ -234,7 +233,7 @@ var AttributeControl = {
 				for(i=0; i<count; i++) {
 					item = UnitItemControl.getItem(unit, i);
 					if(item != null && !item.isWeapon() && ItemControl.isItemUsable(unit, item)) {
-						if(this.getAttackType(item) !== 0) {
+						if(this.getAttackType(item) >= 0) {
 							type = this.getAttackType(item);
 						}
 					}
@@ -246,7 +245,7 @@ var AttributeControl = {
 				count = list.length;
 				for(i=0; i<count; i++) {
 					skill = list[i].skill;
-					if(this.getAttackType(skill) !== 0) {
+					if(this.getAttackType(skill) >= 0) {
 						type = this.getAttackType(skill);
 					}
 				}
@@ -255,7 +254,7 @@ var AttributeControl = {
 				//地形
 				terrain = PosChecker.getTerrainFromPos(unit.getMapX(), unit.getMapY());
 				if (terrain !== null) {
-					if(this.getAttackType(terrain) !== 0) {
+					if(this.getAttackType(terrain) >= 0) {
 						type = this.getAttackType(terrain);
 					}
 				}
@@ -266,7 +265,7 @@ var AttributeControl = {
 				count = list.getCount();
 				for(i=0; i<count; i++) {
 					state = list.getData(i).getState();
-					if(this.getAttackType(state) !== 0) {
+					if(this.getAttackType(state) >= 0) {
 						type = this.getAttackType(state);
 					}
 				}

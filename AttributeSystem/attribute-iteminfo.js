@@ -37,7 +37,7 @@ ItemSentence.AttributeType = defineObject(BaseItemSentence,
 		var font = textui.getFont();
 		var length = 100;
 		
-		if(AttributeControl.getAttackType(item) !== 0) {
+		if(AttributeControl.getAttackType(item) >= 0) {
 			type = AttributeControl.getAttackType(item);
 			if(AttributeControl.isShow(type)) {
 				ItemInfoRenderer.drawKeyword(x, y, strAttributeType);
@@ -48,7 +48,7 @@ ItemSentence.AttributeType = defineObject(BaseItemSentence,
 	},
 	
 	getItemSentenceCount: function(item) {
-		if(AttributeControl.getAttackType(item) !== 0) {
+		if(AttributeControl.getAttackType(item) >= 0) {
 			type = AttributeControl.getAttackType(item);
 			if(AttributeControl.isShow(type)) {
 				return 1;
