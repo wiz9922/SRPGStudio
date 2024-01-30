@@ -199,7 +199,7 @@ var AttributeControl = {
 	//ユニットの攻撃属性の種類を取得
 	getUnitAttackType: function(unit) {
 		var i, list, count, unitClass, weapon, item, skill, terrain, state;
-		var type = 0;
+		var type = -1;
 		
 		//typeは上書き(優先度順)
 		var ip, objectType;
@@ -272,6 +272,12 @@ var AttributeControl = {
 			}
 		}
 		
+		if(type >= 0) {
+			root.log(this.getName(type)+'属性');
+		}
+		else {
+			root.log('属性なし');
+		}
 		return type;
 	},
 	
