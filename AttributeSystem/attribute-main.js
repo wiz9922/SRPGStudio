@@ -280,6 +280,10 @@ var AttributeControl = {
 		var i, list, count, unitClass, weapon, item, skill, terrain, state;
 		var value = this._BaseEnhanceValue;
 		
+		if(type < 0) {
+			return value;
+		}
+		
 		//ユニット
 		value += this.getEnhance(unit, type);
 		
@@ -331,6 +335,10 @@ var AttributeControl = {
 	getUnitResist: function(unit, type) {
 		var i, list, count, unitClass, weapon, item, skill, terrain, state;
 		var value = this._BaseResistValue;
+		
+		if(type < 0) {
+			return value;
+		}
 		
 		//ユニット
 		value += this.getResist(unit, type);
