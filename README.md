@@ -133,9 +133,12 @@ NPCの名前を表示する制御文字を追加します。
 ## UnknownHp
 HPが一定以上の時は「???」で表示されるようになります。
 
+## VariableChangeItem
+スイッチアイテム使用時、変数も変更できます。
+
 ## 連絡先
 wiz  
-twitter: https://twitter.com/wiz9922  
+X: https://x.com/wiz9922  
 GitHub: https://github.com/wiz9922/SRPGstudio  
-mail: wizjp22@gmail.com  
+blog: https://pflaboratory.hatenablog.jp/  
 
