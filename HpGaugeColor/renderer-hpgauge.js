@@ -1,16 +1,20 @@
 /*------------------------------------------------------------------------------
 HPゲージの色(画像)を残りHPによって変更します。
-戦闘画面のゲージも変わりますが、色は戦闘開始時のもので固定です。
 
 ■使用方法
 下記colorIndexArrayの数値を設定してください。
-リソース使用箇所→UI→ユニットHPゲージで使われる画像4種のうち上から0,1,2,3となります。
+リソース使用箇所→UI→HPゲージで使われる画像4種のうち上から0,1,2,3となります。
 
 ■作成者
 wiz
 
 ■対応バージョン
-SRPG Stduio Version:1.257
+SRPG Stduio Version:1.304
+
+■更新履歴
+2022/04/24 作成
+2024/12/08 リアル戦闘、簡易戦闘、回復に対応
+
 ------------------------------------------------------------------------------*/
 (function() {
 
@@ -55,6 +59,52 @@ var _GaugeBar_setGaugeInfo = GaugeBar.setGaugeInfo;
 GaugeBar.setGaugeInfo = function(value, maxValue, colorIndex) {
 	var colorIndex = getGaugeColorIndex(value, maxValue);
 	_GaugeBar_setGaugeInfo.call(this, value, maxValue, colorIndex);
+};
+
+GaugeBar.setColorIndex = function(colorIndex) {
+	this._colorIndex = colorIndex;
+};
+
+//リアル戦闘
+var _UIBattleLayout__drawHpArea = UIBattleLayout._drawHpArea;
+UIBattleLayout._drawHpArea = function(unit, isRight) {
+	var gauge, hp, mhp;
+	if (isRight) {
+		gauge = this._gaugeRight;
+		hp = gauge.getBalancer().getCurrentValue();
+		mhp = gauge.getBalancer().getMaxValue();
+	}
+	else {
+		gauge = this._gaugeLeft;
+		hp = gauge.getBalancer().getCurrentValue();
+		mhp = gauge.getBalancer().getMaxValue();
+	}
+	gauge.setColorIndex(getGaugeColorIndex(hp, mhp));
+	
+	_UIBattleLayout__drawHpArea.call(this, unit, isRight);
+};
+
+//簡易戦闘
+var _EasyAttackWindow__drawHP = EasyAttackWindow._drawHP;
+EasyAttackWindow._drawHP = function(xBase, yBase) {
+	var hp, mhp;
+	if (this._unit !== null) {
+		hp = this._gaugeBar.getBalancer().getCurrentValue();
+		mhp = this._gaugeBar.getBalancer().getMaxValue();
+		this._gaugeBar.setColorIndex(getGaugeColorIndex(hp, mhp));
+	}
+	
+	_EasyAttackWindow__drawHP.call(this, xBase, yBase);
+};
+
+//回復
+var _RecoveryWindow_drawWindowContent = RecoveryWindow.drawWindowContent;
+RecoveryWindow.drawWindowContent = function(xBase, yBase) {
+	var hp = this._gaugeBar.getBalancer().getCurrentValue();
+	var	mhp = this._gaugeBar.getBalancer().getMaxValue();
+	this._gaugeBar.setColorIndex(getGaugeColorIndex(hp, mhp));
+	
+	_RecoveryWindow_drawWindowContent.call(this, xBase, yBase);
 };
 
 })();
